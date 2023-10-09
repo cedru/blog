@@ -1,4 +1,4 @@
-@extends('layout')
+@extends('partials.layout')
 
 @section('content')
     <h1 class="text-3xl font-bold underline">

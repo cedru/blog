@@ -1,4 +1,4 @@
-@extends('layout')
+@extends('partials.layout')
 
 @section('content')
     <div class="container mx-auto">
@@ -9,9 +9,12 @@
                     <div class="card w-96 bg-base-100 shadow-xl h-full">
                         <div class="card-body">
                             <h2 class="card-title">{{ $article->title }}</h2>
-                            <p>{{ $article->body }}</p>
+                            <p>{{ $article->snippet }}</p>
+                                <div class="stat-desc">{{ $article->created_at->diffForHumans() }}</div>
+                            <div class="card-actions justify-end">
+                                <button class="btn btn-primary">Like</button>
+                            </div>
                         </div>
-                        <figure><img src="/images/stock/photo-1606107557195-0e29a4b5b4aa.jpg" alt="Shoes" /></figure>
                     </div>
                 </div>
             @endforeach
