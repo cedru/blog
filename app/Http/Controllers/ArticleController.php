@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Article;
 use App\Http\Requests\StoreArticleRequest;
 use App\Http\Requests\UpdateArticleRequest;
+use Illuminate\Support\Facades\Storage;
 
 class ArticleController extends Controller
 {
@@ -13,7 +14,16 @@ class ArticleController extends Controller
      */
     public function index()
     {
-        $articles = Article::simplePaginate();
+        $articles = auth()->user()->articles()->latest()->paginate();
+        return view('articles.index', compact('articles'));
+    }
+
+    /**
+     * Display a listing of the deleted resource.
+     */
+    public function deleted()
+    {
+        $articles = Article::onlyTrashed()->orderBy('deleted_at')->paginate();
         return view('articles.index', compact('articles'));
     }
 
@@ -31,6 +41,11 @@ class ArticleController extends Controller
     public function store(StoreArticleRequest $request)
     {
         $article = new Article($request->validated());
+        if($request->file('image')) {
+            $file = $request->file('image')->store('/public');
+            $article->image = Storage::url($file);
+        }
+        $article->user()->associate(auth()->user());
         $article->save();
         return redirect()->route('articles.index');
     }
@@ -40,9 +55,7 @@ class ArticleController extends Controller
      */
     public function show(Article $article)
     {
-        $id = $_GET['id'];
-        $article = Article::find($id);
-        return view('articles.view', compact('article'));
+        //
     }
 
     /**
@@ -50,7 +63,7 @@ class ArticleController extends Controller
      */
     public function edit(Article $article)
     {
-        return view('/articles/edit', compact('article'));
+        return view('articles.edit', compact('article'));
     }
 
     /**
@@ -58,10 +71,11 @@ class ArticleController extends Controller
      */
     public function update(UpdateArticleRequest $request, Article $article)
     {
-        $article->title = $_POST['title'];
-        $article->body = $_POST['body'];
+//        $article->title = $request->validated('title');
+//        $article->body = $request->validated('body');
+        $article->fill($request->validated());
         $article->save();
-        return redirect(route('articles.index'));
+        return redirect()->route('articles.index');
     }
 
     /**
@@ -69,9 +83,7 @@ class ArticleController extends Controller
      */
     public function destroy(Article $article)
     {
-        $id = $_GET['id'];
-        $article = Article::find($id);
         $article->delete();
-        return redirect(route('articles.index'));
+        return redirect()->route('articles.index');
     }
 }

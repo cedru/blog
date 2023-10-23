@@ -2,7 +2,8 @@
     <div class="join">
         {{-- Previous Page Link --}}
         @if ($paginator->onFirstPage())
-            <a class="join-item btn btn-disabled" aria-disabled="true" aria-label="@lang('pagination.previous')">&lsaquo;</a>
+            <a class="join-item btn btn-disabled" aria-hidden="true" aria-disabled="true"
+               aria-label="@lang('pagination.previous')">&lsaquo;</a>
         @else
             <a class="join-item btn" href="{{ $paginator->previousPageUrl() }}" rel="prev"
                aria-label="@lang('pagination.previous')">&lsaquo;</a>
