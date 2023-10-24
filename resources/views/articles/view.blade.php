@@ -12,7 +12,7 @@
                 </thead>
                 <tbody>
 
-                    <tr>
+                    <tr>q
                         <td>{{$article->id}}</td>
                         <td>{{$article->title}}</td>
                         <td>{{$article->created_at}}</td>
